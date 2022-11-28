@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br/><br/>
+    <div class="card" style="background-color:#222952 ;">
+    <h1 class="card-header bg-dark text-danger">Flights</h1>
+    <br/>
+    <div class="card-body">
+    <form method="POST">
+            {{form.hidden_tag()}}        
+            {{form.fcode.label(class="form-label text-warning")}}
+            {{form.fcode(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.source.label(class="form-label text-light")}}
+            {{form.source(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.dest.label(class="form-label text-light")}}
+            {{form.dest(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.arr.label(class="form-label text-light")}}
+            {{form.arr(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.dep.label(class="form-label text-light")}}
+            {{form.dep(class="form-control border-dark bg-dark text-bg-primary")}}            
+            {{form.aid.label(class="form-label text-light")}}
+            {{form.aid(class="form-control border-dark bg-dark text-bg-primary")}}
+            <p><br/>
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                More Options
+              </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body" style="background-color:#171d42 ;">
+            {{form.status.label(class="form-label text-light")}}
+            {{form.status(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.dur.label(class="form-label text-light")}}
+            {{form.dur(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.ftype.label(class="form-label text-light")}}
+            {{form.ftype(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.ltime.label(class="form-label text-light")}}
+            {{form.ltime(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.stops.label(class="form-label text-light")}}
+            {{form.stops(class="form-control border-dark bg-dark text-bg-primary")}}
+
+              </div>
+            </div>
+
+            <br/>
+            {{form.submit(class="btn btn-dark")}}  {{form.delete(class="btn btn-dark")}} {{form.update(class="btn btn-dark")}}
+       </form>
+     </div>
+    </div>
+    <br/><br/><br/>
+  <div class="container-fluid">
+{% for message in get_flashed_messages() %}
+<div class="alert alert-info" role="alert">
+  {{message}}
+</div>
+{% endfor %}
+ <table class="table table-hover table-bordered table-dark " style="color:#2684d1 ;">
+  <thead>
+      <tr>
+          
+          <th scope="col">FLIGHT CODE</th>
+          <th scope="col">AIRLINE ID</th>
+          <th scope="col">SOURCE</th>
+          <th>DESTINATION</th>
+          <th>ARRIVAL</th>
+          <th>DEPARTURE</th>
+          <th>STATUS</th>
+          <th>DURATION</th>
+          <th>LAYOVER</th>
+          <th scope="col">STOPS</th>
+          
+      </tr>
+    </thead>
+  <tbody>
+    {% for reg_fl in reg_fl %}
+    <tr>
+      
+      <td>{{reg_fl.FLIGHT_CODE}}</td>
+      <td>{{reg_fl.AIRLINEID}} </td>
+      <td>{{reg_fl.SOURCE}}</td>
+      <td>{{reg_fl.DESTINATION}}</td>
+      <td>{{reg_fl.ARRIVAL}}</td>
+      <td>{{reg_fl.DEPARTURE}}</td>
+      <td>{{reg_fl.STATUS}}</td>
+      <td>{{reg_fl.DURATION}}</td>
+      <td>{{reg_fl.LAYOVER_TIME}}</td>
+      <td>{{reg_fl.NO_OF_STOPS}}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> 
+</div>
+{% endblock %}

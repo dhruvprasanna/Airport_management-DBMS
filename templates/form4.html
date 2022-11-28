@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br/><br/>
+    <div class="card" style="background-color:#222952 ;">
+    <h1 class="card-header bg-dark text-danger">Passengers</h1>
+    <br/>
+    <div class="card-body">
+    <form method="POST">
+            {{form.hidden_tag()}}        
+            {{form.pno.label(class="form-label text-warning")}}
+            {{form.pno(class="form-control border-dark bg-dark text-bg-primary")}}            
+            {{form.pid.label(class="form-label text-warning")}}
+            {{form.pid(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.fname.label(class="form-label text-light")}}
+            {{form.fname(class="form-control border-dark bg-dark text-bg-primary")}}
+
+            {{form.lname.label(class="form-label text-light")}}
+            {{form.lname(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.address.label(class="form-label text-light")}}
+            {{form.address(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.phone.label(class="form-label text-light")}}
+            {{form.phone(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.age.label(class="form-label text-light")}}
+            {{form.age(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.sex.label(class="form-label text-light")}}
+            {{form.sex(class="form-control border-dark bg-dark text-bg-primary")}}
+            <br/>
+            {{form.submit(class="btn btn-dark")}} {{form.delete(class="btn btn-dark")}} {{form.update(class="btn btn-dark")}}
+       </form>
+     </div>
+    </div>
+    <br/><br/><br/>   {% for message in get_flashed_messages() %}
+    <div class="alert alert-info" role="alert">
+      {{message}}
+    </div>
+    {% endfor %}<br/>
+  <div class="shadow bg-body rounded">
+ 
+ <table class="table table-hover table-bordered table-dark" style="color:#2684d1 ;">
+  <thead>
+      <tr>
+          
+          <th scope="col">PASSPORT NUMBER</th>
+          <th>PID</th>
+          <th scope="col">FIRST NAME</th>
+          <th scope="col">LAST NAME</th>
+          <th>ADDRESS</th>
+          <th>PHONE</th>
+          <th>SEX</th>
+          <th>AGE</th>
+          
+      </tr>
+    </thead>
+  <tbody>
+    {% for reg_ps in reg_ps %}
+    <tr>
+      
+      <td>{{reg_ps.PASSPORTNO}}</td>
+      <td>{{reg_ps.PID}}</td>
+      <td>{{reg_ps.FNAME}} </td>
+      <td>{{reg_ps.LNAME}}</td>
+      <td>{{reg_ps.ADDRESS}}</td>
+      <td>{{reg_ps.PHONE}}</td>
+      <td>{{reg_ps.SEX}} </td>
+      <td>{{reg_ps.AGE}} </td>
+
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>  
+</div>
+{% endblock %}

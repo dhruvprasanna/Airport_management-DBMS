@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br/><br/>
+    <div class="card" style="background-color:#222952 ;">
+    <h1 class="card-header bg-dark text-danger">Tickets</h1>
+    <br/>
+    <div class="card-body">
+    <form method="POST">
+            {{form.hidden_tag()}}        
+            {{form.tno.label(class="form-label text-warning")}}
+            {{form.tno(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.source.label(class="form-label text-light")}}
+            {{form.source(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.dest.label(class="form-label text-light")}}
+            {{form.dest(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.date.label(class="form-label text-light")}}
+            {{form.date(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.seat.label(class="form-label text-light")}}
+            {{form.seat(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.cls.label(class="form-label text-light")}}
+            {{form.cls(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.pid.label(class="form-label text-light")}}
+            {{form.pid(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.pno.label(class="form-label text-light")}}
+            {{form.pno(class="form-control border-dark bg-dark text-bg-primary")}}
+            <br/>
+            {{form.submit(class="btn btn-dark")}} {{form.delete(class="btn btn-dark")}} {{form.update(class="btn btn-dark")}}
+       </form>
+     </div>
+    </div>
+    <br/><br/>    <br/>   {% for message in get_flashed_messages() %}
+    <div class="alert alert-info" role="alert">
+      {{message}}
+    </div>
+    {% endfor %}<br/>
+  <div class="shadow bg-body rounded">
+ <table class="table table-hover table-bordered table-dark" style="color:#2684d1 ;">
+  <thead>
+      <tr>
+          
+          <th scope="col">TICKET NUMBER</th>
+          <th scope="col">SOURCE</th>
+          <th scope="col">DESTINATION</th>
+          <th>DATE</th>
+          <th>SEAT NUMBER</th>
+          <th>CLASS</th>
+          <th>PID</th>
+          <th>PASSPORT NUMBER</th>
+          
+      </tr>
+    </thead>
+  <tbody>
+    {% for reg_tick in reg_tick %}
+    <tr>
+      <td>{{reg_tick.TICKET_NUMBER}}</td>
+      <td>{{reg_tick.SOURCE}} </td>
+      <td>{{reg_tick.DESTINATION}}</td>
+      <td>{{reg_tick.DATE_OF_TRAVEL}}</td>
+      <td>{{reg_tick.SEATNO}}</td>
+      <td>{{reg_tick.CLASS}}</td>
+      <td>{{reg_tick.PID}} </td>
+      <td>{{reg_tick.PASSPORTNO}} </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>  
+</div>
+{% endblock %}

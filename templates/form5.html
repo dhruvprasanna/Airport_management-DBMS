@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<br><br><br>
+    <div class="card" style="background-color:#2b2f48;">
+      <h1 class="card-header bg-dark " style="color: #354bd5;">Search</h1>
+      <br/>
+      <div class="card-body">
+      <form method="POST">
+        {{form.hidden_tag()}}
+        {{form.query.label(class="form-label text-light")}}
+        {{form.query(class="form-control border-dark bg-dark text-bg-primary ")}}
+              <br/>
+           {{form.submit(class="btn btn-dark")}}   
+         </form>
+       </div>
+       </div>
+       <br><br>
+        {% if res %}
+      <table class="table table-hover table-bordered table-dark" style="color:#2684d1 ;">
+        <thead>
+            <tr>
+                {% for k in res[0].keys() %}
+                <th scope="col">{{k}}</th>
+                {% endfor %}
+            </tr>
+          </thead>
+        <tbody>
+            {% for value in res %}
+          <tr>
+            {% for v in value.values() %}
+            <td>{{v}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+{% endblock %}

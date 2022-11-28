@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for message in get_flashed_messages() %}
+{% endfor %}
+<br/><br/>
+    <div class="card" style="background-color:#222952;">
+    <h1 class="card-header bg-dark text-danger">Employees</h1>
+    <br/>
+    <div class="card-body">
+    <form method="POST">
+            {{form.hidden_tag()}}        
+            {{form.ssn.label(class="form-label text-warning")}}
+            {{form.ssn(class="form-control border-dark bg-dark text-bg-primary ")}}
+            {{form.fname.label(class="form-label text-light")}}
+            {{form.fname(class="form-control border-dark bg-dark text-bg-primary ")}}{{form.lname.label(class="form-label text-light")}}{{form.lname(class="form-control border-dark bg-dark text-bg-primary ")}}
+            <p><br/>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  More Options
+                </button>
+              </p>
+              <div class="collapse" id="collapseExample">
+                <div class="card card-body " style="background-color:#081038 ;">
+                    {{form.address.label(class="form-label text-light")}}
+                    {{form.address(class="form-control border-dark bg-dark text-bg-primary ")}}
+                    {{form.phone.label(class="form-label text-light")}}
+                    {{form.phone(class="form-control border-dark bg-dark text-bg-primary ")}}
+                    {{form.sex.label(class="form-label text-light")}}
+                    {{form.sex(class="form-control border-dark bg-dark text-bg-primary ")}}
+                    {{form.job.label(class="form-label text-light")}}
+                    {{form.job(class="form-control border-dark bg-dark text-bg-primary ")}}
+                    {{form.age.label(class="form-label text-light")}}
+                    {{form.age(class="form-control border-dark bg-dark text-bg-primary ")}}
+
+                </div>
+              </div>
+
+            <br/>
+            {{form.submit(class="btn btn-dark")}}  {{form.delete(class="btn btn-dark")}}  {{form.update(class="btn btn-dark")}}
+       </form>
+     </div>
+    </div>
+    <br/><br/><br/>
+  <div >
+ <table class="table table-hover table-bordered table-dark " style="color:#2684d1 ;">
+  <thead>
+      <tr>
+          
+
+          <th>SSN</th>
+          <th>FIRST NAME</th>
+          <th>LAST NAME</th>
+          <th>ADDRESS</th>
+          <th>PHONE</th>
+          <th>AGE</th>
+          <th>SEX</th>
+          <th >JOB TYPE</th>
+          <th>AIRPORT</th>
+         
+          
+      </tr>
+    </thead>
+  <tbody>
+    {% for reg_emp in reg_emp %}
+    <tr>
+      
+      <td>{{reg_emp.SSN}}</td>
+      <td>{{reg_emp.FNAME}} </td>
+      <td>{{reg_emp.LNAME}}</td>
+      <td>{{reg_emp.ADDRESS}}</td>
+      <td>{{reg_emp.PHONE}}</td>
+      <td>{{reg_emp.AGE}}</td>
+      <td>{{reg_emp.SEX}}</td>
+      <td>{{reg_emp.JOBTYPE}}</td>
+      <td>{{reg_emp.AP_NAME}}</td>
+      
+
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>  
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<br/><br/>
+    <div class="card" style="background-color:#222952;">
+    <h1 class="card-header bg-dark text-danger">Airlines</h1>
+    <br/>
+    <div class="card-body">
+    <form method="POST">
+            {{form.hidden_tag()}}        
+            {{form.aln.label(class="form-label text-light")}}
+            {{form.aln(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.three.label(class="form-label text-light")}}
+            {{form.three(class="form-control border-dark bg-dark text-bg-primary")}}
+            {{form.aid.label(class="form-label text-warning ")}}
+            {{form.aid(class="form-control border-dark bg-dark text-bg-primary ")}}
+            <br/>
+            {{form.submit(class="btn btn-dark text-success")}}     {{form.delete(class="btn btn-dark text-danger")}} {{form.update(class="btn btn-dark text-info")}}
+       </form>
+     </div>
+     <div class="card-body">
+       </div>
+    </div>
+    <br/>   {% for message in get_flashed_messages() %}
+    <div class="alert alert-info" role="alert">
+      {{message}}
+    </div>
+    {% endfor %}<br/>
+  <div class="shadow bg-body rounded">
+
+ <table class="table table-hover table-bordered table-dark" style="color:#2684d1 ;">
+  <thead>
+      <tr>
+          
+          <th scope="col">AIRLINE NAME</th>
+          <th scope="col">ID</th>
+          <th scope="col">CODE</th>
+          
+      </tr>
+    </thead>
+  <tbody>
+    {% for reg_airlines in reg_airlines %}
+    <tr>
+      
+      <td>{{reg_airlines.AL_NAME}}</td>
+      <td> {{reg_airlines.AIRLINEID}}</td>
+      <td>{{reg_airlines.THREE_DIGIT_CODE}}</td>
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> 
+</div>
+{% endblock %}
