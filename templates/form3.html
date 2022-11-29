@@ -47,12 +47,18 @@
        </form>
      </div>
     </div>
-    <br/><br/><br/>
+    <br/>
   <div class="container-fluid">
 {% for message in get_flashed_messages() %}
-<div class="alert alert-info" role="alert">
+{% if alrt %}
+<div class="alert alert-danger" role="alert">
+  {{message}}
+</div>    
+{% else %}
+<div class="alert alert-success" role="alert">
   {{message}}
 </div>
+{% endif %}
 {% endfor %}
  <table class="table table-hover table-bordered table-dark " style="color:#2684d1 ;">
   <thead>

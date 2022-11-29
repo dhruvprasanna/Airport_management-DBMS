@@ -1,10 +1,12 @@
 from flask import Flask, render_template,current_app,flash,redirect,url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField,IntegerField,TextAreaField,DateField
+from wtforms import StringField,SubmitField,IntegerField,TextAreaField,DateField,SelectField
 from wtforms.validators import DataRequired
 from sqlalchemy.ext.automap import automap_base
 from flask_mysqldb import MySQL
+from sqlalchemy import exc
+from MySQLdb import Error
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:root@localhost:3305/test'
@@ -36,7 +38,25 @@ Passenger=Base.classes.passenger2
 ps=db.session.query(Passenger).all()
 Ticket=Base.classes.ticket1
 tck=db.session.query(Ticket).all()
+Passenger2=Base.classes.passenger3
+p2=db.session.query(Passenger2).all()
 
+a1=[x.PID for x in ps]
+c1=[x.PID for x in p2 if x.PID not in a1]
+c2=[x.FLIGHT_CODE for x in fl]
+
+
+def adddb(rec):
+    try:
+        db.session.add(rec)
+        db.session.commit()
+
+    except exc.SQLAlchemyError as err:
+        error = str(err.__dict__['orig'])
+        alrt=1
+        flash(error[error.index(',')+3:error.index(')')-1])
+        db.session.rollback()
+        return True
 
 class QueryForm(FlaskForm):
     query = StringField("Enter Query")
@@ -54,14 +74,14 @@ class AForm(FlaskForm):
 class EForm(FlaskForm):
     ssn= IntegerField("SSN",validators=[DataRequired()])
     fname= StringField("First Name")
-    m= StringField("M")
+
     lname= StringField("Last Name")
     address= StringField("Address")
     phone= StringField("Phone Number")
     sex= StringField("Gender")
     job= StringField("Job ")
     age= IntegerField("Age")
-    #apname= StringField("AP Name")
+    apname= StringField("AP Name")
     submit= SubmitField("Enter")
     delete = SubmitField("Delete")
     update = SubmitField("Update")
@@ -95,6 +115,11 @@ class PForm(FlaskForm):
     delete = SubmitField("Delete")
     update = SubmitField("Update")
 
+class P2Form(FlaskForm):
+    pid= SelectField("PID",coerce=int,validators=[DataRequired()])
+    fcode= SelectField("Flight Code",choices=c2,validators=[DataRequired()])
+    assign= SubmitField("Assign")
+
 class TForm(FlaskForm):
     tno= StringField("Ticket Number",validators=[DataRequired()])
     source= StringField("Source")
@@ -122,16 +147,18 @@ def index():
 def airlines():
     global air    
     reg_airlines=air
-    alrt="primary"
+    alrt=0
     form=AForm()
     if form.validate_on_submit and form.submit.data:
         airln=Airline(AL_NAME=form.aln.data,THREE_DIGIT_CODE=form.three.data,AIRLINEID=form.aid.data)
-        db.session.add(airln)
-        db.session.commit()
-        alrt="success"
-        flash("Added To Database")
-        air=db.session.query(Airline).all() 
-        return redirect(url_for('airlines'))
+        if adddb(airln):
+            alrt=1
+        else:
+            alrt=0
+            flash("Added To Database")
+            air=db.session.query(Airline).all() 
+            return redirect(url_for('airlines'))
+
     elif form.validate_on_submit and form.delete.data:
         airln=db.session.query(Airline).get(form.aid.data)         
         db.session.delete(airln)
@@ -192,10 +219,10 @@ def employees():
     global emp  
     reg_emp=emp
     form=EForm()
-    if form.validate_on_submit() and form.submit.data:
-        emp=Employee(SSN=form.ssn.data,FNAME=form.fname.data,LNAME=form.lname.data,ADDRESS=form.address.data,
-        PHONE=form.phone.data,AGE=form.age.data,SEX=form.sex.data,JOBTYPE=form.job.data)
-        db.session.add(emp)
+    if form.validate_on_submit and form.submit.data:
+        empl=Employee(SSN=form.ssn.data,FNAME=form.fname.data,LNAME=form.lname.data,ADDRESS=form.address.data,
+        PHONE=form.phone.data,AGE=form.age.data,SEX=form.sex.data,JOBTYPE=form.job.data,AP_NAME=form.apname.data)
+        db.session.add(empl)
         db.session.commit()
         flash("completed")
         emp=db.session.query(Employee).all()
@@ -216,7 +243,7 @@ def employees():
         emp.AGE=form.age.data
         emp.SEX=form.sex.data
         emp.JOBTYPE=form.job.data
-        #emp.AP_NAME=form.apname.data
+        emp.AP_NAME=form.apname.data
         db.session.commit()
         flash("Updated Database")
         emp=db.session.query(Employee).all()
@@ -227,15 +254,18 @@ def employees():
 def flights():
     global fl  
     reg_fl=fl
+    alrt=0
     form=FForm()
     if form.validate_on_submit and form.submit.data:
         flight=Flights(FLIGHT_CODE=form.fcode.data,SOURCE=form.source.data,DESTINATION=form.dest.data,ARRIVAL=form.arr.data,DEPARTURE=form.dep.data,
         STATUS=form.status.data,DURATION=form.dur.data,FLIGHTTYPE=form.ftype.data,LAYOVER_TIME=form.ltime.data,NO_OF_STOPS=form.stops.data,AIRLINEID=form.aid.data)
-        db.session.add(flight)
-        db.session.commit()
-        flash("Added to Database")
-        fl=db.session.query(Flights).all()
-        return redirect(url_for('flights'))
+        if adddb(flight):
+            alrt=1
+        else:
+            flash("Added to Database")
+            fl=db.session.query(Flights).all()
+            return redirect(url_for('flights'))
+
     elif form.validate_on_submit and form.delete.data:
         fl=db.session.query(Flights).get(form.fcode.data)
         db.session.delete(fl)
@@ -243,6 +273,7 @@ def flights():
         flash("Deleted Row From Database")
         fl=db.session.query(Flights).all()
         return redirect(url_for('flights'))
+
     elif form.validate_on_submit and form.update.data:
         fl=db.session.query(Flights).get(form.fcode.data)
         fl.SOURCE=form.source.data
@@ -259,20 +290,28 @@ def flights():
         flash("Updated Database")
         fl=db.session.query(Flights).all()
         return redirect(url_for('flights'))
-    return render_template("form3.html",form=form,reg_fl=reg_fl)
+    return render_template("form3.html",form=form,reg_fl=reg_fl,alrt=alrt)
 
 @app.route('/passenger',methods=['GET','POST'])
 def passenger():
-    global ps  
+    global ps,p2,a1,c1  
     reg_ps=ps
+    reg_p2=p2
     form=PForm()
-    if form.validate_on_submit() and form.submit.data:
+    form2=P2Form()
+    a1=[x.PID for x in p2]
+    c1=[x.PID for x in ps if x.PID not in a1]
+    form2.pid.choices=c1
+    if form.validate_on_submit and form.submit.data:
         passenger=Passenger(PASSPORTNO=form.pno.data,FNAME=form.fname.data,LNAME=form.lname.data,ADDRESS=form.address.data,
         PHONE=form.phone.data,AGE=form.age.data,SEX=form.sex.data,PID=form.pid.data)
         db.session.add(passenger)
         db.session.commit()
         flash("completed")
         ps=db.session.query(Passenger).all()
+        a1=[x.PID for x in p2]
+        c1=[x.PID for x in ps if x.PID not in a1]
+        form2.pid.choices=c1
         return redirect(url_for('passenger'))
     elif form.validate_on_submit and form.delete.data:
         passenger=db.session.query(Passenger).get((form.pid.data,form.pno.data))
@@ -280,6 +319,9 @@ def passenger():
         db.session.commit()
         flash("Deleted Row From Database")
         ps=db.session.query(Passenger).all()
+        a1=[x.PID for x in p2]
+        c1=[x.PID for x in ps if x.PID not in a1]
+        form2.pid.choices=c1
         return redirect(url_for('passenger'))
     elif form.validate_on_submit and form.update.data:
         passenger=db.session.query(Passenger).get((form.pid.data,form.pno.data))
@@ -292,8 +334,19 @@ def passenger():
         db.session.commit()
         flash("Updated Database")
         ps=db.session.query(Passenger).all()
-        return redirect(url_for('passenger'))        
-    return render_template("form4.html",form=form,reg_ps=reg_ps)
+          
+
+    if form2.validate_on_submit and form2.assign.data:
+        passenger2=Passenger2(PID=form2.pid.data,FLIGHT_CODE=form2.fcode.data)
+        if adddb(passenger2):
+            alrt=1
+        else:
+            flash("Assigned to Flight")
+            p2=db.session.query(Passenger2).all()
+            a1=[x.PID for x in ps]
+            c1=[x.PID for x in p2 if x.PID not in a1]
+            return redirect(url_for('passenger'))
+    return render_template("form4.html",form=form,reg_ps=reg_ps,form2=form2,reg_p2=reg_p2)
 
     
 @app.route('/query',methods=['GET','POST'])
@@ -301,9 +354,14 @@ def query():
     global res
     cur = mysql.connection.cursor()
     form =QueryForm()
-    if form.validate_on_submit():  
-        cur.execute(form.query.data)
-        res=cur.fetchall()
-        mysql.connection.commit()
-        form.query.data=''
+    if form.validate_on_submit():
+        try:  
+            cur.execute(form.query.data)
+        except Error as e:
+            error=str(e)
+            flash(error[error.index(',')+3:error.index(')')-1])
+        else:
+            res=cur.fetchall()
+            mysql.connection.commit()
+            form.query.data=''
     return render_template("form5.html",form=form,res=res)

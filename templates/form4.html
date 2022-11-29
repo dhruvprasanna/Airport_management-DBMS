@@ -26,6 +26,7 @@
             {{form.age(class="form-control border-dark bg-dark text-bg-primary")}}
             {{form.sex.label(class="form-label text-light")}}
             {{form.sex(class="form-control border-dark bg-dark text-bg-primary")}}
+         
             <br/>
             {{form.submit(class="btn btn-dark")}} {{form.delete(class="btn btn-dark")}} {{form.update(class="btn btn-dark")}}
        </form>
@@ -70,6 +71,55 @@
     </tr>
     {% endfor %}
   </tbody>
-</table>  
-</div>
+</table> </div> 
+
+  <div class="container overflow-hidden text-center">
+    <div class="row gx-5">
+      <div class="col">
+       <div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        PASSENGER-FLIGHT
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <form method="POST">
+        {{form2.pid.label(class="form-label text-light")}}
+        {{form2.pid(class="form-control border-dark bg-dark text-bg-primary")}}
+        {{form2.fcode.label(class="form-label text-light")}}
+        {{form2.fcode(class="form-control border-dark bg-dark text-bg-primary")}} 
+        <br>
+        {{form2.assign(class="btn btn-dark")}}
+        </form>
+        <br> 
+    </div>
+  </div>
+  </div>
+  </div>
+      </div>
+      <div class="col">
+        <div class="bg-light">
+          <table class="table table-hover table-bordered table-dark" style="color:#2684d1 ;">
+            <thead>
+                <tr>
+                    <th scope="col">PID</th>
+                    <th scope="col">FLIGHT_CODE</th>
+                </tr>
+              </thead>
+            <tbody>
+                {% for v in reg_p2 %}
+              <tr>
+                <td>{{v.PID}}</td>
+                <td>{{v.FLIGHT_CODE}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
