@@ -362,6 +362,6 @@ def query():
             flash(error[error.index(',')+3:error.index(')')-1])
         else:
             res=cur.fetchall()
-            mysql.connection.commit()
+            #mysql.connection.commit()
             form.query.data=''
     return render_template("form5.html",form=form,res=res)
